@@ -1,0 +1,6 @@
+node_modules
+.env
+coverage
+.env.production
+.env.development
+.env.test

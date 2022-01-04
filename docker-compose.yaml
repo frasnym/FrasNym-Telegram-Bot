@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    image: 'postgres:alpine'
+    restart: always
+    env_file: ./.env
+    environment:
+      TZ: $TZ
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql-volume:/var/lib/postgresql/data
+  node-app:
+    build:
+      context: .
+      args:
+        TZ: $TZ
+    image: node-app
+    env_file: ./.env
+    environment:
+      TZ: $TZ
+    ports:
+      - $PORT:$PORT
+    volumes:
+      - ./:/usr/src/node-app
+    depends_on:
+      - postgresdb
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgresql-volume:
