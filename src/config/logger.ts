@@ -10,7 +10,6 @@ const enumerateErrorFormat = format((info) => {
 
 const timezoned = () => {
   return new Date().toLocaleString('en-US', {
-    timeZone: envVars.timezone,
     timeZoneName: 'short',
     hour12: false
   })
