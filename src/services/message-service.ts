@@ -8,8 +8,9 @@ import { ErrorResponse, FailResponse } from '../utils/jsend'
  * Greet me
  */
 export function greetMe(message: TelegramMessage): void {
+  logger.debug(message)
   if (!message || message.text.toLowerCase().indexOf('greetme') < 0) {
-    throw new FailResponse(400, 'Invalid message', message)
+    // throw new FailResponse(400, 'Invalid message', message)
   }
 
   axios
@@ -21,6 +22,6 @@ export function greetMe(message: TelegramMessage): void {
       logger.info(`Success sending message: ${JSON.stringify(res)}`)
     })
     .catch((err) => {
-      throw new ErrorResponse(500, 'Error while sending message', err)
+      // throw new ErrorResponse(500, 'Error while sending message', err)
     })
 }

@@ -7,7 +7,7 @@ const router = Router()
 
 router.post(
   '/private',
-  validate(messageSchema.newMessageToMe),
+  // validate(messageSchema.newMessageToMe),
   messageController.privateMessage.messageToMe
 )
 
