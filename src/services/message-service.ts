@@ -8,7 +8,7 @@ import { ErrorResponse, FailResponse } from '../utils/jsend'
  * Greet me
  */
 export function greetMe(message: TelegramMessage): void {
-  logger.debug(message)
+  logger.info(JSON.stringify(message))
   if (!message || message.text.toLowerCase().indexOf('greetme') < 0) {
     // throw new FailResponse(400, 'Invalid message', message)
   }
