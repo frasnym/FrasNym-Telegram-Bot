@@ -12,12 +12,9 @@ export async function greetMe(message: TelegramMessage): Promise<void> {
   }
 
   try {
-    const res = await axios.post(
-      `https://api.telegram.org/${envVars.telegramBot.token}/sendMessage`,
-      {
-        chat_id: message.chat.id,
-        text: 'Hello there!!'
-      }
+    const chatResponse = encodeURIComponent('Hello there!!')
+    const res = await axios.get(
+      `https://api.telegram.org/${envVars.telegramBot.token}/sendMessage?chat_id=${message.chat.id}&text=${chatResponse}`
     )
     logger.info(`Success sending message: ${JSON.stringify(res)}`)
   } catch (err) {
