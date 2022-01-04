@@ -2,14 +2,13 @@ import axios from 'axios'
 import envVars from '../config/envVars'
 import { logger } from '../config/logger'
 import { TelegramMessage } from '../types/rest-api'
-import { ErrorResponse, FailResponse } from '../utils/jsend'
 
 /**
  * Greet me
  */
 export function greetMe(message: TelegramMessage): void {
-  logger.info(JSON.stringify(message))
   if (!message || message.text.toLowerCase().indexOf('greetme') < 0) {
+    logger.error(`Invalid message: ${JSON.stringify(message)}`)
     // throw new FailResponse(400, 'Invalid message', message)
   }
 
@@ -22,6 +21,7 @@ export function greetMe(message: TelegramMessage): void {
       logger.info(`Success sending message: ${JSON.stringify(res)}`)
     })
     .catch((err) => {
+      logger.error(`Error while sending message: ${JSON.stringify(err)}`)
       // throw new ErrorResponse(500, 'Error while sending message', err)
     })
 }
