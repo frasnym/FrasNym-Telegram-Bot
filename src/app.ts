@@ -17,18 +17,20 @@ if (envVars.env !== 'test') {
   app.use(morgan.errorHandler)
 }
 
-// set security HTTP headers
-app.use(helmet())
-
-// parse json request body
-app.use(express.json())
+app.use(helmet()) // set security HTTP headers
+app.use(express.json()) // parse json request body
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+) // for parsing application/x-www-form-urlencoded
 
 // Available routes
 app.use('/v1', router)
 
 // Exactly base url
 app.use(/^[/]{1}$/, (_req, res) => {
-  res.send(`Boilerplate version ${version}`)
+  res.send(`FrasNym Telegram Bot version ${version}`)
 })
 
 // send back a 404 error for any unknown api request
@@ -36,10 +38,7 @@ app.use(/(?<=.{1}).+/, () => {
   throw new FailResponse(404, 'Not found')
 })
 
-// convert error to JSend Error, if needed
-app.use(errorConverter)
-
-// error handler middleware
-app.use(errorHandler)
+app.use(errorConverter) // convert error to JSend Error, if needed
+app.use(errorHandler) // error handler middleware
 
 export default app
