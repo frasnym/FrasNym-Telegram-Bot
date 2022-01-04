@@ -6,7 +6,7 @@ export const newMessageToMe: IValidation = {
     message: Joi.object({
       text: Joi.string().required(),
       chat: Joi.object({
-        id: Joi.string().required()
+        id: Joi.number().required()
       }).required()
     }).required()
   })
