@@ -1,1 +1,1 @@
-export * as messageController from './message-controller'
+export * as webhookController from './webhook-controller'

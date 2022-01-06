@@ -1,1 +1,1 @@
-export * as messageService from './message-service'
+export * as axiosService from './axios-service'

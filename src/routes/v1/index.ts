@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import { messageRoute } from './message-route'
+import { webhookRoute } from './webhook-route'
 
 const router = Router()
 
 const defaultRoutes = [
   {
-    path: '/message',
-    route: messageRoute
+    path: '/webhook',
+    route: webhookRoute
   }
 ]
 
