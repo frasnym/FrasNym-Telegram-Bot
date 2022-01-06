@@ -7,6 +7,7 @@ import { TelegramMessage } from '../types/rest-api'
  * Greet me
  */
 export async function greetMe(message: TelegramMessage): Promise<void> {
+  logger.error(`Logger message: ${JSON.stringify(message)}`)
   if (!message || message.text.toLowerCase().indexOf('greetme') < 0) {
     logger.error(`Invalid message: ${JSON.stringify(message)}`)
   }
