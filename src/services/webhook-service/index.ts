@@ -1,5 +1,6 @@
 import { logger } from '../../config/logger'
 import { TelegramMessage } from '../../types/rest-api'
+import { GROUP_CHAT_ID } from '../../utils/constant'
 import { telegram as axiosTelegramService } from '../axios-service'
 
 /**
@@ -13,12 +14,15 @@ export async function handleReceivedMessage(
   }
 
   try {
+    // Don't catch message from Logger Group
+    if (message.chat.id === GROUP_CHAT_ID.FrasNymBotLogger) {
+      return
+    }
+
     const loweredCaseMessage = message.text.toLowerCase()
 
     if (loweredCaseMessage.indexOf('hellobot') < 0) {
-      const chatResponse = encodeURIComponent(
-        `Hello ${message.from.first_name} 👋\nHow are you today?`
-      )
+      const chatResponse = `Hello ${message.from.first_name} 👋\nHow are you today?`
       await axiosTelegramService.sendMessage(message.chat.id, chatResponse)
     } else {
       logger.warn(`Unhandled message signal: ${loweredCaseMessage}`)
