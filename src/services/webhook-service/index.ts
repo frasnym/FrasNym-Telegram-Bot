@@ -9,7 +9,7 @@ export async function handleReceivedMessage(
   message: TelegramMessage
 ): Promise<void> {
   if (!message) {
-    logger.warning(`Invalid message: ${JSON.stringify(message)}`)
+    logger.warn(`Invalid message: ${JSON.stringify(message)}`)
   }
 
   try {
@@ -21,7 +21,7 @@ export async function handleReceivedMessage(
       )
       await axiosTelegramService.sendMessage(message.chat.id, chatResponse)
     } else {
-      logger.warning(`Unhandled message signal: ${loweredCaseMessage}`)
+      logger.warn(`Unhandled message signal: ${loweredCaseMessage}`)
     }
   } catch (err) {
     logger.error(`Error while sending message: ${JSON.stringify(err)}`)
