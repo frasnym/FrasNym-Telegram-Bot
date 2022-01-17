@@ -7,6 +7,7 @@ export interface EnvVars {
   PORT: number
   TELEGRAM_LOGGERBOT_TOKEN: string
   TELEGRAM_SENTRYBOT_TOKEN: string
+  POSTGRES_URL: string
 }
 
 /**

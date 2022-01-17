@@ -1,16 +1,21 @@
+import { Server } from 'http'
 import app from './app'
 import { logger } from './config/logger'
 import envVars from './config/envVars'
+import { dbConfig } from './config/db'
 
 const PORT = envVars.port
 
-const server = app
-  .listen(PORT, function () {
-    logger.info(`Application is up and running on port ${PORT}`)
+let server: Server
+dbConfig
+  .authenticate()
+  .then(() => logger.info('[Sequelize] Database authenticated'))
+  .then(() => {
+    server = app.listen(PORT, () => {
+      logger.info(`Application is up and running on port ${PORT}`)
+    })
   })
-  .on('error', function (err) {
-    logger.error(`Failed to initialize app: ${err.message}`)
-  })
+  .catch((e: Error) => logger.error(`Failed to initialize app: ${e.message}`))
 
 const exitHandler = () => {
   if (server) {

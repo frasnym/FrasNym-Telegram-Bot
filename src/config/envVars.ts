@@ -10,8 +10,13 @@ dotenv.config({
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
   PORT: Joi.number().default(3000),
-  TELEGRAM_LOGGERBOT_TOKEN: Joi.string(),
-  TELEGRAM_SENTRYBOT_TOKEN: Joi.string()
+  TELEGRAM_LOGGERBOT_TOKEN: Joi.string().description(
+    'Telegram LoggerBot Token'
+  ),
+  TELEGRAM_SENTRYBOT_TOKEN: Joi.string().description(
+    'Telegram SentryBot Token'
+  ),
+  POSTGRES_URL: Joi.string().required().description('PostgreSQL url')
 }).unknown()
 
 const { value, error } = envVarsSchema.validate(process.env)
@@ -27,5 +32,11 @@ export default {
   telegramBot: {
     logger: `bot${envVars.TELEGRAM_LOGGERBOT_TOKEN}`,
     sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`
+  },
+  postgres: {
+    url: envVars.POSTGRES_URL,
+    options: {
+      logging: false
+    }
   }
 }
