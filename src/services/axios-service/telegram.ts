@@ -12,16 +12,14 @@ export async function sendMessage(
   to: number,
   message: string
 ): Promise<void> {
-  axios
-    .get(
+  try {
+    const res = await axios.get(
       `https://api.telegram.org/${from}/sendMessage?chat_id=${to}&text=${encodeURIComponent(
         message
       )}`
     )
-    .then(function (response) {
-      logger.info(`Success sending message: ${JSON.stringify(response.data)}`)
-    })
-    .catch(function (error) {
-      logger.error(`Error while sending message: ${JSON.stringify(error)}`)
-    })
+    logger.info(`Success sending message: ${JSON.stringify(res.data)}`)
+  } catch (error) {
+    logger.error(`Error while sending message: ${JSON.stringify(error)}`)
+  }
 }
