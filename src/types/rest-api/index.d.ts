@@ -7,6 +7,7 @@ export interface EnvVars {
   PORT: number
   TELEGRAM_LOGGERBOT_TOKEN: string
   TELEGRAM_SENTRYBOT_TOKEN: string
+  TELEGRAM_ZAKATSUBUHBOT_TOKEN: string
   POSTGRES_URL: string
 }
 
@@ -24,7 +25,7 @@ export interface TelegramMessage {
     language_code: string
   }
   chat: {
-    id: number
+    id: string
     first_name: string
     last_name: string
     username: string

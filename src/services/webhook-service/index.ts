@@ -31,3 +31,5 @@ export async function handleReceivedMessage(
     logger.error(`Error while sending message: ${JSON.stringify(err)}`)
   }
 }
+
+export * as zakatSubuh from './zakat-subuh'

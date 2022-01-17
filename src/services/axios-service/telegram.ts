@@ -9,7 +9,7 @@ import { logger } from '../../config/logger'
  */
 export async function sendMessage(
   from: string,
-  to: number,
+  to: string,
   message: string
 ): Promise<void> {
   try {

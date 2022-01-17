@@ -16,6 +16,9 @@ const envVarsSchema = Joi.object({
   TELEGRAM_SENTRYBOT_TOKEN: Joi.string().description(
     'Telegram SentryBot Token'
   ),
+  TELEGRAM_ZAKATSUBUHBOT_TOKEN: Joi.string().description(
+    'Telegram ZakatSubuhBot Token'
+  ),
   POSTGRES_URL: Joi.string().required().description('PostgreSQL url')
 }).unknown()
 
@@ -31,7 +34,8 @@ export default {
   port: envVars.PORT,
   telegramBot: {
     logger: `bot${envVars.TELEGRAM_LOGGERBOT_TOKEN}`,
-    sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`
+    sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`,
+    zakatSubuh: `bot${envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN}`
   },
   postgres: {
     url: envVars.POSTGRES_URL,
