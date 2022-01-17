@@ -4,7 +4,7 @@ import { catchAsync } from '../../utils/catch-async'
 import { GROUP_CHAT_ID } from '../../utils/constant'
 import { SuccessResponse } from '../../utils/jsend'
 
-export const frasnymBotWebhook = catchAsync(async function (req, res) {
+export const sentryBotWebhook = catchAsync(async function (req, res) {
   // Send message log to FrasNymBotLog Group
   axiosService.telegram.sendMessage(
     envVars.telegramBot.logger,
@@ -12,7 +12,7 @@ export const frasnymBotWebhook = catchAsync(async function (req, res) {
     JSON.stringify(req.body)
   )
 
-  // await webhookService.handleReceivedMessage(req.body.message)
+  await webhookService.handleReceivedMessage(req.body.message)
 
   res.send(new SuccessResponse().serializeResponse())
 })
