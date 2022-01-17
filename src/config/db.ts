@@ -4,7 +4,8 @@ import envVars from './envVars'
 
 const dbConfig = new sequelize.Sequelize(envVars.postgres.url, {
   logging: false,
-  dialect: 'postgres'
+  dialect: 'postgres',
+  dialectModule: require('pg')
 })
 
 export { dbConfig }
