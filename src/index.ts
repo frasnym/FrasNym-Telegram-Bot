@@ -8,7 +8,7 @@ const PORT = envVars.port
 
 let server: Server
 dbConfig
-  .sync()
+  .authenticate()
   .then(() => logger.info('[Sequelize] Database authenticated'))
   .then(() => {
     server = app.listen(PORT, () => {
