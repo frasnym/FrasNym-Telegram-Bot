@@ -29,8 +29,6 @@ export async function handleReceivedMessage(
     if (loweredCaseMessage.indexOf('bismillah sedekah subuh') >= 0) {
       const splittedText = loweredCaseMessage.split(' ')
       const newZakatValue = parseInt(splittedText[2])
-      console.log(newZakatValue)
-
       if (newZakatValue) {
         await zakatService.updateZakatByTelegramId(
           message.chat.id,
