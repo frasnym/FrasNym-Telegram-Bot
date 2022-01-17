@@ -3,6 +3,6 @@ import { webhookController } from '../../controllers'
 
 const router = Router()
 
-router.post('/frasnymbot', webhookController.frasnymBotWebhook)
+router.post('/sentourybot', webhookController.frasnymBotWebhook)
 
 export { router as webhookRoute }

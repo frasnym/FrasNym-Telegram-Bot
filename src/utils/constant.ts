@@ -1,3 +1,4 @@
 export const GROUP_CHAT_ID = {
-  FrasNymBotLogger: -738055094
+  FrasNymBotLog: -738055094,
+  FrasNymDevHelper: -365715861
 }

@@ -1,22 +1,27 @@
 import axios from 'axios'
-import envVars from '../../config/envVars'
 import { logger } from '../../config/logger'
 
 /**
  * Send telegram message
+ * @param from bot token
+ * @param to chat id
+ * @param message
  */
 export async function sendMessage(
-  chatId: number,
+  from: string,
+  to: number,
   message: string
 ): Promise<void> {
-  try {
-    const res = await axios.get(
-      `https://api.telegram.org/${
-        envVars.telegramBot.token
-      }/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`
+  axios
+    .get(
+      `https://api.telegram.org/${from}/sendMessage?chat_id=${to}&text=${encodeURIComponent(
+        message
+      )}`
     )
-    logger.info(`Success sending message: ${JSON.stringify(res)}`)
-  } catch (err) {
-    logger.error(`Error while sending message: ${JSON.stringify(err)}`)
-  }
+    .then(function (response) {
+      logger.info(`Success sending message: ${JSON.stringify(response.data)}`)
+    })
+    .catch(function (error) {
+      logger.error(`Error while sending message: ${JSON.stringify(error)}`)
+    })
 }

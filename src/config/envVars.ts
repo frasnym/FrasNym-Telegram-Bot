@@ -10,7 +10,8 @@ dotenv.config({
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
   PORT: Joi.number().default(3000),
-  TELEGRAM_BOT_TOKEN: Joi.string()
+  TELEGRAM_LOGGERBOT_TOKEN: Joi.string(),
+  TELEGRAM_SENTRYBOT_TOKEN: Joi.string()
 }).unknown()
 
 const { value, error } = envVarsSchema.validate(process.env)
@@ -24,6 +25,7 @@ export default {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   telegramBot: {
-    token: `bot${envVars.TELEGRAM_BOT_TOKEN}`
+    logger: `bot${envVars.TELEGRAM_LOGGERBOT_TOKEN}`,
+    sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`
   }
 }
