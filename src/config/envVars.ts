@@ -38,9 +38,6 @@ export default {
     zakatSubuh: `bot${envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN}`
   },
   postgres: {
-    url: envVars.POSTGRES_URL,
-    options: {
-      logging: false
-    }
+    url: envVars.POSTGRES_URL
   }
 }

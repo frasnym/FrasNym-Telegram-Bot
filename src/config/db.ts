@@ -2,10 +2,10 @@ import * as sequelize from 'sequelize'
 import { FanuserFactory, ZakatSubuhFactory } from '../models'
 import envVars from './envVars'
 
-const dbConfig = new sequelize.Sequelize(
-  envVars.postgres.url,
-  envVars.postgres.options
-)
+const dbConfig = new sequelize.Sequelize(envVars.postgres.url, {
+  logging: false,
+  dialect: 'postgres'
+})
 
 export { dbConfig }
 
