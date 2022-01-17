@@ -1,7 +1,6 @@
 import envVars from '../../config/envVars'
 import { logger } from '../../config/logger'
 import { TelegramMessage } from '../../types/rest-api'
-import { GROUP_CHAT_ID } from '../../utils/constant'
 import { telegram as axiosTelegramService } from '../axios-service'
 
 /**
@@ -12,6 +11,7 @@ export async function handleReceivedMessage(
 ): Promise<void> {
   if (!message) {
     logger.warn(`Invalid message: ${JSON.stringify(message)}`)
+    return
   }
 
   try {
