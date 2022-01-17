@@ -18,3 +18,21 @@ export class Fanuser extends Model<FanuserModel, FanuserAttributes> {}
 export type FanuserStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): FanuserModel
 }
+
+/**
+ * Define how ZakatSubuh model should looks like
+ */
+export interface ZakatSubuhAttributes {
+  id: number
+  fanuserId: number
+  total: number
+  createdAt?: Date
+  updatedAt?: Date
+}
+export interface ZakatSubuhModel
+  extends Model<ZakatSubuhAttributes>,
+    ZakatSubuhAttributes {}
+export class ZakatSubuh extends Model<ZakatSubuhModel, ZakatSubuhAttributes> {}
+export type ZakatSubuhStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): ZakatSubuhModel
+}
