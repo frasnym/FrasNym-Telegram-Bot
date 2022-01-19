@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import envVars from '../config/envVars'
 import { axiosService } from '../services'
 import { GROUP_CHAT_ID } from '../utils/constant'

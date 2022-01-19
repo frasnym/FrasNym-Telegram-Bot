@@ -11,3 +11,7 @@ export const zakatSubuhBotWebhook = catchAsync(async function (req, res) {
   await webhookService.zakatSubuhBot.handleReceivedMessage(req.body.message)
   res.send(new SuccessResponse().serializeResponse())
 })
+
+export const loggerBotWebhook = catchAsync(async function (req, res) {
+  res.send(new SuccessResponse().serializeResponse())
+})
