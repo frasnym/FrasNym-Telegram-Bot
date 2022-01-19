@@ -90,7 +90,8 @@ class ZakatSubuhService {
 
     const formattedDate = new Intl.DateTimeFormat('id', {
       dateStyle: 'full',
-      timeStyle: 'long'
+      timeStyle: 'long',
+      timeZone: 'Asia/Makassar'
     }).format(new Date(zakatSubuh.updatedAt!))
 
     this.zakatSubuhAxios.sendMessage(
