@@ -1,7 +1,9 @@
 import { ErrorRequestHandler } from 'express'
 import envVars from '../config/envVars'
 import { logger } from '../config/logger'
-import { ErrorResponse, FailResponse } from '../utils/jsend'
+import { UnhandledMessageResponse } from '../errors/telegram-error'
+import { axiosService } from '../services'
+import { ErrorResponse, FailResponse, SuccessResponse } from '../utils/jsend'
 
 interface JsendError {
   statusCode: number
@@ -12,8 +14,15 @@ interface JsendError {
   stack?: any
 }
 
-const errorConverter: ErrorRequestHandler = (err, _req, _res, next) => {
+const errorConverter: ErrorRequestHandler = function (err, _req, res, next) {
   let error = err
+
+  if (error instanceof UnhandledMessageResponse) {
+    const botAxios = new axiosService.AxiosTelegram(error.botToken)
+    botAxios.sendMessage(error.telegramId, error.message)
+    res.send(new SuccessResponse(error.message).serializeResponse())
+    return
+  }
 
   if (!(error instanceof FailResponse) && !(error instanceof ErrorResponse)) {
     let stack: string | undefined
@@ -29,12 +38,12 @@ const errorConverter: ErrorRequestHandler = (err, _req, _res, next) => {
   next(error)
 }
 
-const errorHandler: ErrorRequestHandler = (
+const errorHandler: ErrorRequestHandler = function (
   err: JsendError,
   _req,
   res,
   _next
-) => {
+) {
   const { statusCode, status } = err
 
   res.locals.errorMessage = err.message

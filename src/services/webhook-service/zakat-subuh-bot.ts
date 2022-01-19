@@ -1,43 +1,72 @@
 import { logger } from '../../config/logger'
 import { TelegramMessage } from '../../types/rest-api'
 import * as zakatService from '../zakat-service'
-import * as axiosService from '../axios-service'
 import envVars from '../../config/envVars'
+import {
+  TelegramError,
+  UnhandledMessageResponse
+} from '../../errors/telegram-error'
 
-function sendUnableToHandleMessage(telegramId: string) {
-  axiosService.telegram.sendMessage(
-    envVars.telegramBot.zakatSubuh,
-    telegramId,
-    'Sorry, unable to handle your message'
-  )
-}
-
+/**
+ * Handle caption message from telegram message
+ */
 async function handleCaption(text: string, telegramId: string) {
   const loweredCaseText = typeof text === 'string' ? text.toLowerCase() : null
   if (!loweredCaseText) {
-    logger.warn(`Invalid message: ${JSON.stringify(text)}`)
-    return
+    const errMessage = `Invalid caption message: ${JSON.stringify(text)}`
+    logger.warn(errMessage)
+    throw new TelegramError(errMessage)
   }
 
   if (loweredCaseText.indexOf('bismillah sedekah subuh') >= 0) {
     const splittedText = loweredCaseText.split(' ')
     const newZakatValue = parseInt(splittedText[2])
-    if (!newZakatValue) throw new Error()
+    if (!newZakatValue) {
+      throw new TelegramError(`Invalid zakat value: ${splittedText[2]}`)
+    }
 
-    await zakatService.updateZakatByTelegramId(telegramId, newZakatValue)
-  } else throw new Error()
+    try {
+      const zakatSubuhService = new zakatService.ZakatSubuhService(telegramId)
+      await zakatSubuhService.initializeFanuser()
+      await zakatSubuhService.updateZakat(newZakatValue)
+    } catch (error) {
+      if (error instanceof TelegramError) {
+        throw new TelegramError(error.message)
+      } else {
+        throw new Error(
+          `Error while handling caption message: ${JSON.stringify(error)}`
+        )
+      }
+    }
+  }
 }
 
+/**
+ * Handle text message from telegram message
+ */
 async function handleText(text: string, telegramId: string) {
   const loweredCaseText = typeof text === 'string' ? text.toLowerCase() : null
   if (!loweredCaseText) {
-    logger.warn(`Invalid message: ${JSON.stringify(text)}`)
-    return
+    const errMessage = `Invalid text message: ${JSON.stringify(text)}`
+    logger.warn(errMessage)
+    throw new TelegramError(errMessage)
   }
 
   if (loweredCaseText.indexOf('/info') >= 0) {
-    await zakatService.sendCurrentZakatByTelegramId(telegramId)
-  } else throw new Error()
+    try {
+      const zakatSubuhService = new zakatService.ZakatSubuhService(telegramId)
+      await zakatSubuhService.initializeFanuser()
+      await zakatSubuhService.sendCurrentZakat()
+    } catch (error) {
+      if (error instanceof TelegramError) {
+        throw new TelegramError(error.message)
+      } else {
+        throw new Error(
+          `Error while handling text message: ${JSON.stringify(error)}`
+        )
+      }
+    }
+  }
 }
 
 /**
@@ -60,6 +89,16 @@ export async function handleReceivedMessage(
       await handleText(message.text, message.chat.id)
     }
   } catch (err) {
-    sendUnableToHandleMessage(message.chat.id)
+    if (err instanceof TelegramError) {
+      throw new UnhandledMessageResponse(
+        envVars.telegramBot.zakatSubuh,
+        message.chat.id,
+        err.message
+      )
+    } else {
+      logger.error(
+        `Error while handling received message: ${JSON.stringify(err)}`
+      )
+    }
   }
 }
