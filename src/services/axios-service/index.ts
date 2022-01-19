@@ -21,9 +21,9 @@ class AxiosTelegram {
       logger.info(`[Axios-${apiReqId}] Request to telegram...`)
 
       const res = await axios.get(url, {
-        timeout: 2000,
-        httpAgent: new http.Agent({ keepAlive: true }),
-        headers: { 'content-type': 'application/json' }
+        // timeout: 2000,
+        // httpAgent: new http.Agent({ keepAlive: true }),
+        // headers: { 'content-type': 'application/json' }
       })
 
       logger.info(
