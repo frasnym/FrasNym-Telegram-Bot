@@ -11,15 +11,28 @@ class AxiosTelegram {
   }
 
   async sendMessage(recipient: string, message: string) {
+    const sendAxiosId = `${recipient}_${Date.now()}`
+
     try {
+      logger.info(`[Axios-${sendAxiosId}] Request to telegram...`)
+
       const res = await axios.get(
         `https://api.telegram.org/${
           this.botToken
         }/sendMessage?chat_id=${recipient}&text=${encodeURIComponent(message)}`
       )
-      logger.info(`Success sending message: ${JSON.stringify(res.data)}`)
+
+      logger.info(
+        `[Axios-${sendAxiosId}] Success send message: ${JSON.stringify(
+          res.data
+        )}`
+      )
     } catch (error) {
-      logger.error(`Error while sending message: ${JSON.stringify(error)}`)
+      logger.info(
+        `[Axios-${sendAxiosId}] Error while sending message: ${JSON.stringify(
+          error
+        )}`
+      )
     }
   }
 }
