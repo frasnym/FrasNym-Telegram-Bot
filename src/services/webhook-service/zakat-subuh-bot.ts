@@ -24,10 +24,15 @@ export async function handleReceivedMessage(
   }
 
   try {
-    const loweredCaseMessage = message.text.toLowerCase()
+    const loweredCaseCaption =
+      typeof message.caption === 'string' ? message.caption.toLowerCase() : null
+    if (!loweredCaseCaption) {
+      logger.warn(`Invalid message: ${JSON.stringify(message)}`)
+      return
+    }
 
-    if (loweredCaseMessage.indexOf('bismillah sedekah subuh') >= 0) {
-      const splittedText = loweredCaseMessage.split(' ')
+    if (loweredCaseCaption.indexOf('bismillah sedekah subuh') >= 0) {
+      const splittedText = loweredCaseCaption.split(' ')
       const newZakatValue = parseInt(splittedText[2])
       if (newZakatValue) {
         await zakatService.updateZakatByTelegramId(

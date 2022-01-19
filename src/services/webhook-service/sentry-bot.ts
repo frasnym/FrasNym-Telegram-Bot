@@ -15,7 +15,12 @@ export async function handleReceivedMessage(
   }
 
   try {
-    const loweredCaseMessage = message.text.toLowerCase()
+    const loweredCaseMessage =
+      typeof message.text === 'string' ? message.text.toLowerCase() : null
+    if (!loweredCaseMessage) {
+      logger.warn(`Invalid message: ${JSON.stringify(message)}`)
+      return
+    }
 
     if (loweredCaseMessage.indexOf('hellobot') >= 0) {
       const chatResponse = `Hello ${message.from.first_name} 👋\nHow are you today?`

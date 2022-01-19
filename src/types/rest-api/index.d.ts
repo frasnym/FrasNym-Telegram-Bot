@@ -32,7 +32,20 @@ export interface TelegramMessage {
     type: string
   }
   date: number
-  text: string
+  text?: string
+  photo?: {
+    file_id: string
+    file_unique_id: string
+    file_size: number
+    width: number
+    height: number
+  }[]
+  caption?: string
+  caption_entities?: {
+    offset: number
+    length: number
+    type: string
+  }[]
 }
 
 /**
