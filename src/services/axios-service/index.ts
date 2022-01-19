@@ -1,4 +1,5 @@
 import axios from 'axios'
+import http from 'http'
 import { logger } from '../../config/logger'
 
 export * as telegram from './telegram'
@@ -11,28 +12,21 @@ class AxiosTelegram {
   }
 
   async sendMessage(recipient: string, message: string) {
-    const sendAxiosId = `${recipient}_${Date.now()}`
+    const apiReqId = `${recipient}_${Date.now()}`
+    const url = `https://api.telegram.org/${
+      this.botToken
+    }/sendMessage?chat_id=${recipient}&text=${encodeURIComponent(message)}`
 
     try {
-      logger.info(`[Axios-${sendAxiosId}] Request to telegram...`)
+      logger.info(`[Axios-${apiReqId}] Request to telegram...`)
 
-      const res = await axios.get(
-        `https://api.telegram.org/${
-          this.botToken
-        }/sendMessage?chat_id=${recipient}&text=${encodeURIComponent(message)}`
-      )
+      const res = await axios.get(url, { timeout: 2000 })
 
       logger.info(
-        `[Axios-${sendAxiosId}] Success send message: ${JSON.stringify(
-          res.data
-        )}`
+        `[Axios-${apiReqId}] Success send message: ${JSON.stringify(res.data)}`
       )
     } catch (error) {
-      logger.info(
-        `[Axios-${sendAxiosId}] Error while sending message: ${JSON.stringify(
-          error
-        )}`
-      )
+      logger.info(`[Axios-${apiReqId}] Error while sending message: ${error}}`)
     }
   }
 }

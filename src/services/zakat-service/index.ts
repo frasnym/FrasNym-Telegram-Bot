@@ -51,9 +51,7 @@ class ZakatSubuhService {
 
       this.fanuser = fanuser
     } catch (error) {
-      throw new Error(
-        `Error get user from telegramId: ${JSON.stringify(error)}`
-      )
+      throw new Error(`Error get user from telegramId: ${error}`)
     }
   }
 

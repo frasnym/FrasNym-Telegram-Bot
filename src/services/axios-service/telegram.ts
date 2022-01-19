@@ -20,6 +20,6 @@ export async function sendMessage(
     )
     logger.info(`Success sending message: ${JSON.stringify(res.data)}`)
   } catch (error) {
-    logger.error(`Error while sending message: ${JSON.stringify(error)}`)
+    logger.error(`Error while sending message: ${error}`)
   }
 }
