@@ -22,7 +22,7 @@ class AxiosTelegram {
 
       const res = await axios.get(url, {
         // timeout: 2000,
-        // httpAgent: new http.Agent({ keepAlive: true }),
+        httpAgent: new http.Agent({ keepAlive: true })
         // headers: { 'content-type': 'application/json' }
       })
 
