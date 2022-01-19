@@ -20,7 +20,10 @@ class AxiosTelegram {
     try {
       logger.info(`[Axios-${apiReqId}] Request to telegram...`)
 
-      const res = await axios.get(url, { timeout: 2000 })
+      const res = await axios.get(url, {
+        timeout: 2000,
+        headers: { 'content-type': 'application/json' }
+      })
 
       logger.info(
         `[Axios-${apiReqId}] Success send message: ${JSON.stringify(res.data)}`
