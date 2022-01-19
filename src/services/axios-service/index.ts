@@ -1,5 +1,6 @@
 import axios from 'axios'
 import http from 'http'
+import https from 'https'
 import { logger } from '../../config/logger'
 
 export * as telegram from './telegram'
@@ -22,7 +23,10 @@ class AxiosTelegram {
 
       const res = await axios.get(url, {
         // timeout: 2000,
-        httpAgent: new http.Agent({ keepAlive: true })
+        httpAgent: new http.Agent({ keepAlive: true }),
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
         // headers: { 'content-type': 'application/json' }
       })
 
@@ -30,7 +34,7 @@ class AxiosTelegram {
         `[Axios-${apiReqId}] Success send message: ${JSON.stringify(res.data)}`
       )
     } catch (error) {
-      logger.info(`[Axios-${apiReqId}] Error while sending message: ${error}}`)
+      logger.info(`[Axios-${apiReqId}] Error while sending message: ${error}`)
     }
   }
 }
