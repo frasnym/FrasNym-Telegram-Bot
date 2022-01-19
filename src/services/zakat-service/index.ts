@@ -8,7 +8,7 @@ import { numberWithCommas } from '../../utils/number'
 /**
  * Get ZakatSubuh by fanusedId
  */
-export function getZakatSubuhByFanuserId(
+function getZakatSubuhByFanuserId(
   fanuserId: number
 ): Promise<ZakatSubuhModel | null> {
   return ZakatSubuh.findOne({
@@ -30,10 +30,12 @@ async function upsertZakatByFanuserId(fanuserId: number, zakatValue: number) {
   return zakatSubuh
 }
 
-export async function updateZakatByTelegramId(
-  telegramId: string,
-  zakatValue: number
-) {
+/**
+ * Update zakat value in database and send updated zakat to user
+ * @param telegramId
+ * @param zakatValue
+ */
+async function updateZakatByTelegramId(telegramId: string, zakatValue: number) {
   const fanuser = await fanuserService.getUserByTelegramId(telegramId)
   if (!fanuser) {
     await axiosService.telegram.sendMessage(
@@ -41,6 +43,7 @@ export async function updateZakatByTelegramId(
       telegramId,
       'User not found, please register'
     )
+    return
   }
 
   const zakatSubuh = await upsertZakatByFanuserId(fanuser!.id, zakatValue)
@@ -54,3 +57,45 @@ export async function updateZakatByTelegramId(
     chatResponse
   )
 }
+
+/**
+ * Send updated zakat to user
+ * @param telegramId
+ * @returns
+ */
+async function sendCurrentZakatByTelegramId(telegramId: string) {
+  const fanuser = await fanuserService.getUserByTelegramId(telegramId)
+  if (!fanuser) {
+    await axiosService.telegram.sendMessage(
+      envVars.telegramBot.zakatSubuh,
+      telegramId,
+      'User not found, please register'
+    )
+    return
+  }
+
+  const zakatSubuh = await getZakatSubuhByFanuserId(fanuser.id)
+  if (!zakatSubuh) {
+    await axiosService.telegram.sendMessage(
+      envVars.telegramBot.zakatSubuh,
+      telegramId,
+      'Data not found'
+    )
+    return
+  }
+
+  const formattedDate = new Intl.DateTimeFormat('id', {
+    dateStyle: 'full',
+    timeStyle: 'long'
+  }).format(new Date(zakatSubuh.updatedAt!))
+
+  await axiosService.telegram.sendMessage(
+    envVars.telegramBot.zakatSubuh,
+    telegramId,
+    `Total Zakat: IDR ${numberWithCommas(
+      zakatSubuh.total
+    )}\nLast Updated: ${formattedDate}`
+  )
+}
+
+export { updateZakatByTelegramId, sendCurrentZakatByTelegramId }
