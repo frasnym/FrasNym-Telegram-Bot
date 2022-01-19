@@ -1,10 +1,15 @@
 import { Server } from 'http'
+import { Telegraf } from 'telegraf'
 import app from './app'
 import { logger } from './config/logger'
 import envVars from './config/envVars'
 import { dbConfig } from './config/db'
 
 const PORT = envVars.port
+
+const zakatSubuhBot = new Telegraf(envVars.telegramBot.zakatSubuh)
+zakatSubuhBot.command('info', (ctx) => ctx.reply('yoyo'))
+zakatSubuhBot.launch()
 
 let server: Server
 dbConfig
@@ -35,10 +40,11 @@ const unexpectedErrorHandler = (error: Error) => {
 
 process.on('uncaughtException', unexpectedErrorHandler)
 process.on('unhandledRejection', unexpectedErrorHandler)
-
+process.on('SIGINT', () => zakatSubuhBot.stop('SIGINT'))
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received')
   if (server) {
     server.close()
   }
+  zakatSubuhBot.stop('SIGTERM')
 })
