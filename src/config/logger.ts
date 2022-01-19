@@ -8,11 +8,12 @@ const enumerateErrorFormat = format((info) => {
   return info
 })
 
-const timezoned = () => {
-  return new Date().toLocaleString('en-US', {
-    timeZoneName: 'short',
-    hour12: false
-  })
+function timezoned() {
+  return new Intl.DateTimeFormat('id', {
+    dateStyle: 'full',
+    timeStyle: 'long',
+    timeZone: 'Asia/Makassar'
+  }).format(new Date())
 }
 
 const logger = createLogger({
