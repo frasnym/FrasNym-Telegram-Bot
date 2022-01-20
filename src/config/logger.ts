@@ -1,4 +1,5 @@
 import { format, createLogger, transports } from 'winston'
+import { formatToDateID } from '../utils/date'
 import envVars from './envVars'
 
 const enumerateErrorFormat = format((info) => {
@@ -8,18 +9,10 @@ const enumerateErrorFormat = format((info) => {
   return info
 })
 
-function timezoned() {
-  return new Intl.DateTimeFormat('id', {
-    dateStyle: 'full',
-    timeStyle: 'long',
-    timeZone: 'Asia/Makassar'
-  }).format(new Date())
-}
-
 const logger = createLogger({
   level: envVars.env === 'development' ? 'debug' : 'info',
   format: format.combine(
-    format.timestamp({ format: timezoned }),
+    format.timestamp({ format: () => formatToDateID(new Date()) }),
     enumerateErrorFormat(),
     envVars.env === 'development' ? format.colorize() : format.uncolorize(),
     format.splat(),
