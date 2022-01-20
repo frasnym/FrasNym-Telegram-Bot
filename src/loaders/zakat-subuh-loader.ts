@@ -1,36 +1,45 @@
-import { Telegraf } from 'telegraf'
+import { Telegraf, Context } from 'telegraf'
+import * as tg from 'typegram'
 import envVars from '../config/envVars'
+import { logger } from '../config/logger'
+import { zakatSubuhController } from '../controllers'
 import { TelegramError } from '../errors/telegram-error'
 import { zakatService } from '../services'
 import { formatToDateID } from '../utils/date'
 import { numberWithCommas } from '../utils/number'
 
-export default function zakatSubuhBotLoader() {
-  const zakatSubuhBot = new Telegraf(envVars.telegramBot.zakatSubuhTokenOnly)
-  zakatSubuhBot.command('info', async function (ctx) {
-    try {
-      const zakatSubuhService = new zakatService.ZakatSubuhService(
-        ctx.chat.id.toString()
-      )
-      await zakatSubuhService.initializeFanuser()
-      const zakatSubuh = await zakatSubuhService.getCurrentZakat()
+export default class ZakatSubuhBot {
+  private bot: Telegraf<Context<tg.Update>>
+  private botSecretPath?: string
 
-      ctx.reply(
-        `Total Zakat: IDR ${numberWithCommas(
-          zakatSubuh.total
-        )}\nLast Updated: ${formatToDateID(zakatSubuh.updatedAt!)}`
-      )
-    } catch (error) {
-      if (error instanceof TelegramError) {
-        ctx.reply(error.message)
-      } else {
-        ctx.reply(`Error while handling text message: ${JSON.stringify(error)}`)
-      }
-    }
-  })
-  zakatSubuhBot.launch()
+  constructor() {
+    this.bot = this.getBotInstance()
+  }
 
-  // Enable graceful stop
-  process.once('SIGINT', () => zakatSubuhBot.stop('SIGINT'))
-  process.once('SIGTERM', () => zakatSubuhBot.stop('SIGTERM'))
+  getBotInstance() {
+    if (!this.bot) this.initializeBot()
+    return this.bot
+  }
+
+  getBotSecretPath() {
+    if (!this.bot) this.initializeBot()
+    return this.botSecretPath
+  }
+
+  initializeBot() {
+    if (this.bot) return
+    const newBot = new Telegraf(envVars.telegramBot.zakatSubuh)
+
+    newBot.command('info', zakatSubuhController.sendZakatInformationToUser)
+
+    this.botSecretPath = `/${newBot.secretPathComponent()}`
+    newBot.telegram.setWebhook(`${envVars.basePath}${this.botSecretPath}`)
+
+    // Enable graceful stop
+    process.once('SIGINT', () => newBot.stop('SIGINT'))
+    process.once('SIGTERM', () => newBot.stop('SIGTERM'))
+
+    this.bot = newBot
+    logger.info('[ZakatSubuhBot] Sucessfully initialized')
+  }
 }

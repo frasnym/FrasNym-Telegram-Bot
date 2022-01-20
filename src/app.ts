@@ -8,6 +8,7 @@ import { router } from './routes/v1'
 import { FailResponse } from './utils/jsend'
 
 import { version } from '../package.json'
+import ZakatSubuhBot from './loaders/zakat-subuh-loader'
 
 const app: Application = express()
 
@@ -24,6 +25,14 @@ app.use(
     extended: true
   })
 ) // for parsing application/x-www-form-urlencoded
+
+// Initialize Bot
+const zakatSubuhBot = new ZakatSubuhBot()
+app.use(
+  zakatSubuhBot
+    .getBotInstance()
+    .webhookCallback(zakatSubuhBot.getBotSecretPath())
+)
 
 // Available routes
 app.use('/v1', router)

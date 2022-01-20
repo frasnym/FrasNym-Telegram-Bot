@@ -4,6 +4,7 @@
 export interface EnvVars {
   TZ: string
   NODE_ENV: string
+  BASE_PATH: string
   PORT: number
   TELEGRAM_LOGGERBOT_TOKEN: string
   TELEGRAM_SENTRYBOT_TOKEN: string

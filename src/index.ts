@@ -3,7 +3,6 @@ import app from './app'
 import { logger } from './config/logger'
 import envVars from './config/envVars'
 import { dbConfig } from './config/db'
-import zakatSubuhBotLoader from './loaders/zakat-subuh-loader'
 
 const PORT = envVars.port
 
@@ -12,7 +11,6 @@ dbConfig
   .authenticate()
   .then(() => logger.info('[Sequelize] Database authenticated'))
   .then(() => {
-    zakatSubuhBotLoader()
     server = app.listen(PORT, () => {
       logger.info(`Application is up and running on port ${PORT}`)
     })

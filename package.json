@@ -30,6 +30,7 @@
     "eslint": "^5.16.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.5",
+    "ngrok": "^4.3.0",
     "prettier-eslint": "^13.0.0",
     "prettier-eslint-cli": "^5.0.1",
     "ts-node-dev": "^1.1.8",
