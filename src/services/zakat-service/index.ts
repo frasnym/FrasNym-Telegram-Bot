@@ -1,11 +1,7 @@
 import * as fanuserService from '../fanuser-service'
-import * as axiosService from '../axios-service'
-import envVars from '../../config/envVars'
 import { ZakatSubuh } from '../../config/db'
 import { FanuserModel, ZakatSubuhModel } from '../../types/model'
-import { numberWithCommas } from '../../utils/number'
 import { TelegramError } from '../../errors/telegram-error'
-import { formatToDateID } from '../../utils/date'
 
 /**
  * Get ZakatSubuh by fanusedId
@@ -41,12 +37,12 @@ async function upsertZakatByFanuserId(
 }
 
 class ZakatSubuhService {
+  private telegramId: string
   private fanuser?: FanuserModel
-  private zakatSubuhAxios = new axiosService.AxiosTelegram(
-    envVars.telegramBot.zakatSubuh
-  )
 
-  constructor(private telegramId: string) {}
+  constructor(telegramId: string) {
+    this.telegramId = telegramId
+  }
 
   /**
    * Initialize Fanuser from provided TelegramId
@@ -65,24 +61,6 @@ class ZakatSubuhService {
   }
 
   /**
-   * Update zakat value in database and send updated zakat to user
-   */
-  async updateZakat(zakatValue: number) {
-    if (!this.fanuser) {
-      throw new TelegramError('User not found, please initialize')
-    }
-
-    const zakatSubuh = await upsertZakatByFanuserId(this.fanuser.id, zakatValue)
-
-    this.zakatSubuhAxios.sendMessage(
-      this.telegramId,
-      `Congratulations, Your zakat has been updated 🎉\nTotal: IDR ${numberWithCommas(
-        zakatSubuh.total
-      )}`
-    )
-  }
-
-  /**
    * Get updated zakat
    */
   async getCurrentZakat() {
@@ -96,20 +74,6 @@ class ZakatSubuhService {
     }
 
     return zakatSubuh
-  }
-
-  /**
-   * Send updated zakat to user
-   */
-  async sendCurrentZakat() {
-    const zakatSubuh = await this.getCurrentZakat()
-
-    this.zakatSubuhAxios.sendMessage(
-      this.telegramId,
-      `Total Zakat: IDR ${numberWithCommas(
-        zakatSubuh.total
-      )}\nLast Updated: ${formatToDateID(zakatSubuh.updatedAt!)}`
-    )
   }
 
   /**

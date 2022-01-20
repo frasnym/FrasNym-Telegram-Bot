@@ -1,6 +1,6 @@
 {
   "name": "frasnym-telegram-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An API to handle FrasNym Telegram Bot interaction",
   "main": "index.js",
   "scripts": {
@@ -37,11 +37,12 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.1.5",
     "ngrok": "^4.3.0",
+    "prettier-eslint": "^13.0.0",
+    "prettier-eslint-cli": "^5.0.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "helmet": "^5.0.1",

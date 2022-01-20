@@ -13,43 +13,6 @@ export interface EnvVars {
 }
 
 /**
- * Define telegram message
- */
-export interface TelegramMessage {
-  message_id: number
-  from: {
-    id: number
-    is_bot: boolean
-    first_name: string
-    last_name: string
-    username: string
-    language_code: string
-  }
-  chat: {
-    id: string
-    first_name: string
-    last_name: string
-    username: string
-    type: string
-  }
-  date: number
-  text?: string
-  photo?: {
-    file_id: string
-    file_unique_id: string
-    file_size: number
-    width: number
-    height: number
-  }[]
-  caption?: string
-  caption_entities?: {
-    offset: number
-    length: number
-    type: string
-  }[]
-}
-
-/**
  * One of: year, quarter, month, week, day, hour, minute, second
  * Used to work with dateAdd utils
  */
