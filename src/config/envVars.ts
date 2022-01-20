@@ -35,7 +35,8 @@ export default {
   telegramBot: {
     logger: `bot${envVars.TELEGRAM_LOGGERBOT_TOKEN}`,
     sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`,
-    zakatSubuh: `bot${envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN}`
+    zakatSubuh: `bot${envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN}`,
+    zakatSubuhTokenOnly: envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN
   },
   postgres: {
     url: envVars.POSTGRES_URL

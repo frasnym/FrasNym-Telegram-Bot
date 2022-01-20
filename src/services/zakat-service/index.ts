@@ -5,6 +5,7 @@ import { ZakatSubuh } from '../../config/db'
 import { FanuserModel, ZakatSubuhModel } from '../../types/model'
 import { numberWithCommas } from '../../utils/number'
 import { TelegramError } from '../../errors/telegram-error'
+import { formatToDateID } from '../../utils/date'
 
 /**
  * Get ZakatSubuh by fanusedId
@@ -74,9 +75,9 @@ class ZakatSubuhService {
   }
 
   /**
-   * Send updated zakat to user
+   * Get updated zakat
    */
-  async sendCurrentZakat() {
+  async getCurrentZakat() {
     if (!this.fanuser) {
       throw new TelegramError('User not found, please initialize')
     }
@@ -86,17 +87,20 @@ class ZakatSubuhService {
       throw new TelegramError('Zakat subuh data not found')
     }
 
-    const formattedDate = new Intl.DateTimeFormat('id', {
-      dateStyle: 'full',
-      timeStyle: 'long',
-      timeZone: 'Asia/Makassar'
-    }).format(new Date(zakatSubuh.updatedAt!))
+    return zakatSubuh
+  }
+
+  /**
+   * Send updated zakat to user
+   */
+  async sendCurrentZakat() {
+    const zakatSubuh = await this.getCurrentZakat()
 
     this.zakatSubuhAxios.sendMessage(
       this.telegramId,
       `Total Zakat: IDR ${numberWithCommas(
         zakatSubuh.total
-      )}\nLast Updated: ${formattedDate}`
+      )}\nLast Updated: ${formatToDateID(zakatSubuh.updatedAt!)}`
     )
   }
 }

@@ -1,21 +1,18 @@
 import { Server } from 'http'
-import { Telegraf } from 'telegraf'
 import app from './app'
 import { logger } from './config/logger'
 import envVars from './config/envVars'
 import { dbConfig } from './config/db'
+import zakatSubuhBotLoader from './loaders/zakat-subuh-loader'
 
 const PORT = envVars.port
-
-const zakatSubuhBot = new Telegraf(envVars.telegramBot.zakatSubuh)
-zakatSubuhBot.command('info', (ctx) => ctx.reply('yoyo'))
-zakatSubuhBot.launch()
 
 let server: Server
 dbConfig
   .authenticate()
   .then(() => logger.info('[Sequelize] Database authenticated'))
   .then(() => {
+    zakatSubuhBotLoader()
     server = app.listen(PORT, () => {
       logger.info(`Application is up and running on port ${PORT}`)
     })
@@ -34,17 +31,17 @@ const exitHandler = () => {
 }
 
 const unexpectedErrorHandler = (error: Error) => {
+  console.log(error)
+
   logger.error(error)
   exitHandler()
 }
 
 process.on('uncaughtException', unexpectedErrorHandler)
 process.on('unhandledRejection', unexpectedErrorHandler)
-process.on('SIGINT', () => zakatSubuhBot.stop('SIGINT'))
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received')
   if (server) {
     server.close()
   }
-  zakatSubuhBot.stop('SIGTERM')
 })
