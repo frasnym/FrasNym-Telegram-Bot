@@ -35,8 +35,8 @@ export default {
   basePath: envVars.BASE_PATH,
   port: envVars.PORT,
   telegramBot: {
-    logger: `bot${envVars.TELEGRAM_LOGGERBOT_TOKEN}`,
-    sentry: `bot${envVars.TELEGRAM_SENTRYBOT_TOKEN}`,
+    logger: envVars.TELEGRAM_LOGGERBOT_TOKEN,
+    sentry: envVars.TELEGRAM_SENTRYBOT_TOKEN,
     zakatSubuh: envVars.TELEGRAM_ZAKATSUBUHBOT_TOKEN
   },
   postgres: {

@@ -9,6 +9,7 @@ import { FailResponse } from './utils/jsend'
 
 import { version } from '../package.json'
 import ZakatSubuhBot from './loaders/zakat-subuh-bot-loader'
+import LoggerBot from './loaders/logger-bot-loader'
 
 const app: Application = express()
 
@@ -32,6 +33,10 @@ app.use(
   zakatSubuhBot
     .getBotInstance()
     .webhookCallback(zakatSubuhBot.getBotSecretPath())
+)
+const loggerBot = new LoggerBot()
+app.use(
+  loggerBot.getBotInstance().webhookCallback(loggerBot.getBotSecretPath())
 )
 
 // Available routes

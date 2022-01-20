@@ -2,9 +2,8 @@ import { Telegraf, Context } from 'telegraf'
 import * as tg from 'typegram'
 import envVars from '../config/envVars'
 import { logger } from '../config/logger'
-import { sendZakatInformationToUser } from '../controllers/zakat-subuh-controller'
 
-export default class ZakatSubuhBot {
+export default class LoggerBot {
   private bot: Telegraf<Context<tg.Update>>
   private botSecretPath?: string
 
@@ -24,9 +23,11 @@ export default class ZakatSubuhBot {
 
   initializeBot() {
     if (this.bot) return
-    const newBot = new Telegraf(envVars.telegramBot.zakatSubuh)
+    const newBot = new Telegraf(envVars.telegramBot.logger)
 
-    newBot.command('info', sendZakatInformationToUser)
+    newBot.on('photo', (ctx) => {
+      ctx.reply('[on-photo] ' + JSON.stringify(ctx.message))
+    })
 
     this.botSecretPath = `/${newBot.secretPathComponent()}`
     newBot.telegram.setWebhook(`${envVars.basePath}${this.botSecretPath}`)
@@ -36,6 +37,6 @@ export default class ZakatSubuhBot {
     process.once('SIGTERM', () => newBot.stop('SIGTERM'))
 
     this.bot = newBot
-    logger.info(`[ZakatSubuhBot-${this.botSecretPath}] Sucessfully initialized`)
+    logger.info(`[LoggerBot-${this.botSecretPath}] Sucessfully initialized`)
   }
 }
