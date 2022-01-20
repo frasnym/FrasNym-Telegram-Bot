@@ -2,11 +2,7 @@ import { Telegraf, Context } from 'telegraf'
 import * as tg from 'typegram'
 import envVars from '../config/envVars'
 import { logger } from '../config/logger'
-import { zakatSubuhController } from '../controllers'
-import { TelegramError } from '../errors/telegram-error'
-import { zakatService } from '../services'
-import { formatToDateID } from '../utils/date'
-import { numberWithCommas } from '../utils/number'
+import { sendZakatInformationToUser } from '../controllers/zakat-subuh-controller'
 
 export default class ZakatSubuhBot {
   private bot: Telegraf<Context<tg.Update>>
@@ -30,7 +26,7 @@ export default class ZakatSubuhBot {
     if (this.bot) return
     const newBot = new Telegraf(envVars.telegramBot.zakatSubuh)
 
-    newBot.command('info', zakatSubuhController.sendZakatInformationToUser)
+    newBot.command('info', sendZakatInformationToUser)
 
     this.botSecretPath = `/${newBot.secretPathComponent()}`
     newBot.telegram.setWebhook(`${envVars.basePath}${this.botSecretPath}`)
