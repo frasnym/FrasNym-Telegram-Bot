@@ -8,7 +8,7 @@ import { router } from './routes/v1'
 import { FailResponse } from './utils/jsend'
 
 import { version } from '../package.json'
-import ZakatSubuhBot from './loaders/zakat-subuh-loader'
+import ZakatSubuhBot from './loaders/zakat-subuh-bot-loader'
 
 const app: Application = express()
 
