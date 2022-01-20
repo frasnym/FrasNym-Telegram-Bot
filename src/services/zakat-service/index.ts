@@ -21,13 +21,21 @@ function getZakatSubuhByFanuserId(
 /**
  * Upsert Zakat By FanuserId
  */
-async function upsertZakatByFanuserId(fanuserId: number, zakatValue: number) {
+async function upsertZakatByFanuserId(
+  fanuserId: number,
+  zakatValue: number,
+  operator: '-' | '+' = '+'
+) {
   const zakatSubuh = await getZakatSubuhByFanuserId(fanuserId)
   if (!zakatSubuh) {
     return await ZakatSubuh.create({ fanuserId, total: zakatValue })
   }
 
-  Object.assign(zakatSubuh, { total: zakatSubuh.total + zakatValue })
+  const newTotal =
+    operator === '+'
+      ? zakatSubuh.total + zakatValue
+      : zakatSubuh.total - zakatValue
+  Object.assign(zakatSubuh, { total: newTotal })
   await zakatSubuh.save()
   return zakatSubuh
 }
@@ -102,6 +110,16 @@ class ZakatSubuhService {
         zakatSubuh.total
       )}\nLast Updated: ${formatToDateID(zakatSubuh.updatedAt!)}`
     )
+  }
+
+  /**
+   * Increase zakat value in database
+   */
+  async increaseZakat(zakatValue: number) {
+    if (!this.fanuser) {
+      throw new TelegramError('User not found, please initialize')
+    }
+    return upsertZakatByFanuserId(this.fanuser.id, zakatValue, '+')
   }
 }
 
