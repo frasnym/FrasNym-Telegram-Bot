@@ -26,6 +26,10 @@ export default class ZakatSubuhBot {
     if (this.bot) return
     const newBot = new Telegraf(envVars.telegramBot.zakatSubuh)
 
+    /**
+     * Available command
+     * info - Informasi jumlah sedekah Anda
+     */
     newBot.command('info', zakatSubuhBot.sendZakatInformationToUser)
     newBot.on('photo', zakatSubuhBot.increaseZakatBySpin)
 

@@ -22,12 +22,14 @@ export async function sendZakatInformationToUser(
     const zakatSubuh = await zakatSubuhService.getCurrentZakat()
 
     ctx.reply(
-      `Total Zakat: IDR ${numberWithCommas(
+      `Jumlah sedekah Anda adalah: Rp ${numberWithCommas(
         zakatSubuh.total
-      )} 👍\nLast Updated: ${formatToDateID(zakatSubuh.updatedAt!)}`
+      )} 👍\nDiubah terakhir pada: ${formatToDateID(
+        zakatSubuh.updatedAt!
+      )}\n\nSemoga berkah yaa..`
     )
     logger.info(
-      `[ZakatSubuhBot] [${ctx.chat.id}] Successfully sendZakatInformationToUser`
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully sendZakatInformationToUser`
     )
   } catch (error) {
     if (error instanceof TelegramError) {
@@ -70,12 +72,12 @@ export async function increaseZakatBySpin(
       const zakatSubuh = await zakatSubuhService.increaseZakat(newZakatValue)
 
       ctx.reply(
-        `Congratulations, Your zakat has been updated 🎉\nTotal: IDR ${numberWithCommas(
+        `Selamat, jumlah total sedekah Anda sudah diperbaharui 🎉\nTotal: Rp ${numberWithCommas(
           zakatSubuh.total
         )}`
       )
       logger.info(
-        `[ZakatSubuhBot] [${ctx.chat.id}] Successfully increaseZakatBySpin`
+        `[SedekahSubuhBot] [${ctx.chat.id}] Successfully increaseZakatBySpin`
       )
     }
   } catch (error) {
