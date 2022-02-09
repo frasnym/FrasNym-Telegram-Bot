@@ -1,6 +1,6 @@
 import * as fanuserService from '../fanuser-service'
 import { ZakatSubuh } from '../../config/db'
-import { FanuserModel, ZakatSubuhModel } from '../../types/model'
+import { FanuserModel, ZakatSubuhAttributes, ZakatSubuhModel } from '../../types/model'
 import { TelegramError } from '../../errors/telegram-error'
 
 /**
@@ -84,6 +84,25 @@ class ZakatSubuhService {
       throw new TelegramError('User not found, please initialize')
     }
     return upsertZakatByFanuserId(this.fanuser.id, zakatValue, '+')
+  }
+
+  /**
+   * Update zakat subuh table
+   */
+  async updateZakatSubuhTable(updateBody: Partial<ZakatSubuhAttributes>) {
+    if (!this.fanuser) {
+      throw new TelegramError('User not found, please initialize')
+    }
+
+    const zakatSubuh = await getZakatSubuhByFanuserId(this.fanuser.id)
+    if (!zakatSubuh) {
+      throw new TelegramError('Zakat subuh data not found')
+    }
+
+    Object.assign(zakatSubuh, updateBody)
+    await zakatSubuh.save()
+
+    return zakatSubuh
   }
 }
 

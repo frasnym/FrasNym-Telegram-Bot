@@ -36,6 +36,7 @@ export default class ZakatSubuhBot {
     newBot.command('hello', zakatSubuhBot.greeting)
     newBot.command('info', zakatSubuhBot.sendZakatInformationToUser)
     newBot.command('randomalms', zakatSubuhBot.increaseZakatWithRandom)
+    newBot.command('setrandomalms', zakatSubuhBot.updateRandomSeedValue)
     newBot.on('photo', zakatSubuhBot.increaseZakatBySpin)
 
     this.botSecretPath = `/${newBot.secretPathComponent()}`

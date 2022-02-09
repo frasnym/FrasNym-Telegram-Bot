@@ -123,7 +123,67 @@ export async function increaseZakatWithRandom(
     if (error instanceof TelegramError) {
       ctx.reply(error.message)
     } else {
-      ctx.reply(`Error while increaseZakatWithRandom: ${JSON.stringify(error)}`)
+      ctx.reply(`Error while increaseZakatWithRandom: ${error}`)
+    }
+  }
+}
+
+export async function updateRandomSeedValue(
+  ctx: MatchedContext<Context<tg.Update>, 'text'>
+) {
+  try {
+    const commandExample = '/setrandomalms 100,200,300';
+    const randomSeedPlain = (ctx.message.text).replace('/setrandomalms', '')
+    if (!randomSeedPlain) {
+      ctx.replyWithMarkdown(`Mohon untuk mencantumkan nilai acak\n\nContoh: \`${commandExample}\``)
+      return
+    }
+
+    let stopNow = false
+    const newRandomSeed: number[] = []
+
+    // Check every value provided
+    const randomSeedArray = randomSeedPlain.split(',')
+    randomSeedArray.every((rnd, index) => {
+      // The every() function behaves exactly like forEach(),
+      // except it stops iterating through the array whenever the callback function returns a falsy value.
+
+      const anyNotDigitRemoved = rnd.replace(/\D+/g, '')
+      const parsedToInt = parseInt(anyNotDigitRemoved)
+      if (!parsedToInt) {
+        ctx.replyWithMarkdown(`Nilai ke-${index + 1} (${rnd}) harus berupa angka\n\nContoh: \`${commandExample}\``)
+        stopNow = true
+        return false
+      }
+
+      newRandomSeed.push(parsedToInt)
+      return true
+    });
+
+    if (stopNow) {
+      return
+    }
+
+    // Initialize zakat subuh
+    const zakatSubuhService = new zakatService.ZakatSubuhService(
+      ctx.chat.id.toString()
+    )
+    await zakatSubuhService.initializeFanuser()
+
+    // Update table
+    const newRandomSeedJoined = newRandomSeed.join(',')
+    await zakatSubuhService.updateZakatSubuhTable({ random_seed: newRandomSeedJoined })
+
+    ctx.reply(
+      `Perubahan nilai acak berhasil 🙌\n\nNilai acak sekarang: ${newRandomSeedJoined}`)
+    logger.info(
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully updateRandomSeedValue`
+    )
+  } catch (error) {
+    if (error instanceof TelegramError) {
+      ctx.reply(error.message)
+    } else {
+      ctx.reply(`Error while updateRandomSeedValue: ${error}`)
     }
   }
 }
