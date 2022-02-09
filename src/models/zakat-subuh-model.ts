@@ -10,7 +10,7 @@ export function ZakatSubuhFactory(sequelize: Sequelize): ZakatSubuhStatic {
         autoIncrement: true,
         primaryKey: true
       },
-      fanuserId: {
+      fanuser_id: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
@@ -22,7 +22,7 @@ export function ZakatSubuhFactory(sequelize: Sequelize): ZakatSubuhStatic {
     },
     {
       freezeTableName: true,
-      timestamps: true
+      timestamps: false
     }
   )
 

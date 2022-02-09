@@ -21,7 +21,7 @@ export type FanuserStatic = typeof Model & {
  * Define how ZakatSubuh model should looks like
  */
 export interface ZakatSubuhAttributes {
-  fanuserId: number
+  fanuser_id: number
   total: number
   createdAt?: Date
   updatedAt?: Date

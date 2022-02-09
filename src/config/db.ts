@@ -13,4 +13,4 @@ export { dbConfig }
 export const Fanuser = FanuserFactory(dbConfig)
 export const ZakatSubuh = ZakatSubuhFactory(dbConfig)
 
-ZakatSubuh.belongsTo(Fanuser, { foreignKey: 'fanuserId', targetKey: 'id' })
+ZakatSubuh.belongsTo(Fanuser, { foreignKey: 'fanuser_id', targetKey: 'id' })

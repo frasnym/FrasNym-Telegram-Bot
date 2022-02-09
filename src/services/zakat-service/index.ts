@@ -10,7 +10,7 @@ function getZakatSubuhByFanuserId(
   fanuserId: number
 ): Promise<ZakatSubuhModel | null> {
   return ZakatSubuh.findOne({
-    where: { fanuserId }
+    where: { fanuser_id: fanuserId }
   })
 }
 
@@ -24,7 +24,7 @@ async function upsertZakatByFanuserId(
 ) {
   const zakatSubuh = await getZakatSubuhByFanuserId(fanuserId)
   if (!zakatSubuh) {
-    return await ZakatSubuh.create({ fanuserId, total: zakatValue })
+    return await ZakatSubuh.create({ fanuser_id: fanuserId, total: zakatValue })
   }
 
   const newTotal =
