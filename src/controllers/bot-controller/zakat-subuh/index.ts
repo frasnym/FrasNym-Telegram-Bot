@@ -35,6 +35,7 @@ export async function sendZakatInformationToUser(
     if (error instanceof TelegramError) {
       ctx.reply(error.message)
     } else {
+      logger.error(error)
       ctx.reply(
         `Error while sending zakat information: ${JSON.stringify(error)}`
       )
