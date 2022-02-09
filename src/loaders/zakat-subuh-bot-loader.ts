@@ -30,9 +30,13 @@ export default class ZakatSubuhBot {
      * Available command
      * hello - Greeting to show you account info
      * info - Informasi jumlah sedekah Anda
+     * randomalms - Sedekah dengan nilai acak
+     * setrandomalms - Tambah nilai sedekah acak
      */
     newBot.command('hello', zakatSubuhBot.greeting)
     newBot.command('info', zakatSubuhBot.sendZakatInformationToUser)
+    newBot.command('randomalms', zakatSubuhBot.increaseZakatWithRandom)
+    newBot.command('setrandomalms', zakatSubuhBot.updateRandomSeedValue)
     newBot.on('photo', zakatSubuhBot.increaseZakatBySpin)
 
     this.botSecretPath = `/${newBot.secretPathComponent()}`

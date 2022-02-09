@@ -18,6 +18,10 @@ export function ZakatSubuhFactory(sequelize: Sequelize): ZakatSubuhStatic {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
+      },
+      random_seed: {
+        type: DataTypes.STRING,
+        allowNull: true,
       }
     },
     {

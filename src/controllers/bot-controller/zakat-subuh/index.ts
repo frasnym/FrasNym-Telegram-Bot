@@ -35,7 +35,7 @@ export async function sendZakatInformationToUser(
     } else {
       logger.error(error)
       ctx.reply(
-        `Error while sending zakat information: ${JSON.stringify(error)}`
+        `Error while sending zakat information: ${error}`
       )
     }
   }
@@ -83,7 +83,107 @@ export async function increaseZakatBySpin(
     if (error instanceof TelegramError) {
       ctx.reply(error.message)
     } else {
-      ctx.reply(`Error while increase zakat: ${JSON.stringify(error)}`)
+      ctx.reply(`Error while increase zakat: ${error}`)
+    }
+  }
+}
+
+export async function increaseZakatWithRandom(
+  ctx: MatchedContext<Context<tg.Update>, 'text'>
+) {
+  try {
+    const zakatSubuhService = new zakatService.ZakatSubuhService(
+      ctx.chat.id.toString()
+    )
+    await zakatSubuhService.initializeFanuser()
+
+    const sedekahSubuh = await zakatSubuhService.getCurrentZakat()
+    if (!sedekahSubuh.random_seed) {
+      ctx.replyWithMarkdown('Anda belum mempunyai nilai acak sedekah.\nAnda dapat mengubah nilai acak dengan cara: `/setrandomalms`')
+      return
+    }
+
+    const randomSeed = sedekahSubuh.random_seed.split(',')
+    const random = Math.floor(Math.random() * randomSeed.length);
+    const newZakatValue = parseInt(randomSeed[random])
+    if (!newZakatValue) {
+      throw new TelegramError(`Invalid zakat value: ${randomSeed[random]}`)
+    }
+
+    const zakatSubuh = await zakatSubuhService.increaseZakat(newZakatValue)
+
+    ctx.reply(
+      `Selamat, jumlah total sedekah Anda sudah diperbaharui 🎉\nHasil acak: Rp ${newZakatValue}\nTotal: Rp ${numberWithCommas(
+        zakatSubuh.total
+      )}`)
+    logger.info(
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully increaseZakatWithRandom`
+    )
+  } catch (error) {
+    if (error instanceof TelegramError) {
+      ctx.reply(error.message)
+    } else {
+      ctx.reply(`Error while increaseZakatWithRandom: ${error}`)
+    }
+  }
+}
+
+export async function updateRandomSeedValue(
+  ctx: MatchedContext<Context<tg.Update>, 'text'>
+) {
+  try {
+    const commandExample = '/setrandomalms 100,200,300';
+    const randomSeedPlain = (ctx.message.text).replace('/setrandomalms', '')
+    if (!randomSeedPlain) {
+      ctx.replyWithMarkdown(`Mohon untuk mencantumkan nilai acak\n\nContoh: \`${commandExample}\``)
+      return
+    }
+
+    let stopNow = false
+    const newRandomSeed: number[] = []
+
+    // Check every value provided
+    const randomSeedArray = randomSeedPlain.split(',')
+    randomSeedArray.every((rnd, index) => {
+      // The every() function behaves exactly like forEach(),
+      // except it stops iterating through the array whenever the callback function returns a falsy value.
+
+      const anyNotDigitRemoved = rnd.replace(/\D+/g, '')
+      const parsedToInt = parseInt(anyNotDigitRemoved)
+      if (!parsedToInt) {
+        ctx.replyWithMarkdown(`Nilai ke-${index + 1} (${rnd}) harus berupa angka\n\nContoh: \`${commandExample}\``)
+        stopNow = true
+        return false
+      }
+
+      newRandomSeed.push(parsedToInt)
+      return true
+    });
+
+    if (stopNow) {
+      return
+    }
+
+    // Initialize zakat subuh
+    const zakatSubuhService = new zakatService.ZakatSubuhService(
+      ctx.chat.id.toString()
+    )
+    await zakatSubuhService.initializeFanuser()
+
+    // Update table
+    const newRandomSeedJoined = newRandomSeed.join(',')
+    await zakatSubuhService.updateZakatSubuhTable({ random_seed: newRandomSeedJoined })
+
+    ctx.reply(
+      `Perubahan nilai acak berhasil 🙌\n\nNilai acak sekarang: ${newRandomSeedJoined}`)
+    logger.info(
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully updateRandomSeedValue`
+    )
+  } catch (error) {
+    if (error instanceof TelegramError) {
+      ctx.reply(error.message)
+    } else {
+      ctx.reply(`Error while updateRandomSeedValue: ${error}`)
     }
   }
 }
@@ -110,7 +210,7 @@ export async function greeting(
       ctx.reply(error.message)
     } else {
       ctx.reply(
-        `Error while greeting: ${JSON.stringify(error)}`
+        `Error while greeting: ${error}`
       )
     }
   }

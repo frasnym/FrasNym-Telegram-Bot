@@ -23,6 +23,7 @@ export type FanuserStatic = typeof Model & {
 export interface ZakatSubuhAttributes {
   fanuser_id: number
   total: number
+  random_seed?: string
 }
 export interface ZakatSubuhModel
   extends Model<ZakatSubuhAttributes>,
