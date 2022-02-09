@@ -24,9 +24,7 @@ export async function sendZakatInformationToUser(
     ctx.reply(
       `Jumlah sedekah Anda adalah: Rp ${numberWithCommas(
         zakatSubuh.total
-      )} 👍\nDiubah terakhir pada: ${formatToDateID(
-        zakatSubuh.updatedAt!
-      )}\n\nSemoga berkah yaa..`
+      )} 👍\n\nSemoga berkah yaa..`
     )
     logger.info(
       `[SedekahSubuhBot] [${ctx.chat.id}] Successfully sendZakatInformationToUser`
