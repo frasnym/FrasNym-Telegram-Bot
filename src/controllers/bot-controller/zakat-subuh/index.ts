@@ -35,7 +35,7 @@ export async function sendZakatInformationToUser(
     } else {
       logger.error(error)
       ctx.reply(
-        `Error while sending zakat information: ${JSON.stringify(error)}`
+        `Error while sending zakat information: ${error}`
       )
     }
   }
@@ -83,7 +83,7 @@ export async function increaseZakatBySpin(
     if (error instanceof TelegramError) {
       ctx.reply(error.message)
     } else {
-      ctx.reply(`Error while increase zakat: ${JSON.stringify(error)}`)
+      ctx.reply(`Error while increase zakat: ${error}`)
     }
   }
 }
@@ -150,7 +150,7 @@ export async function greeting(
       ctx.reply(error.message)
     } else {
       ctx.reply(
-        `Error while greeting: ${JSON.stringify(error)}`
+        `Error while greeting: ${error}`
       )
     }
   }
