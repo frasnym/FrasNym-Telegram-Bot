@@ -14,14 +14,14 @@ export function FanuserFactory(sequelize: Sequelize): FanuserStatic {
         type: DataTypes.STRING(50),
         allowNull: false
       },
-      telegramId: {
+      telegram_id: {
         type: DataTypes.STRING(10),
         allowNull: true
       }
     },
     {
       freezeTableName: true,
-      timestamps: true
+      timestamps: false
     }
   )
 

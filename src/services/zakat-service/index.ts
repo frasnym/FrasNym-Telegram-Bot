@@ -49,7 +49,7 @@ class ZakatSubuhService {
    */
   async initializeFanuser() {
     try {
-      const fanuser = await fanuserService.getUserByTelegramId(this.telegramId)
+      const fanuser = await fanuserService.getUserBytelegramId(this.telegramId)
       if (!fanuser) {
         throw new TelegramError('User not found, please register')
       }

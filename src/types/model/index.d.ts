@@ -7,16 +7,14 @@ import { BuildOptions, Model } from 'sequelize'
 export interface FanuserAttributes {
   id: number
   name: string
-  telegramId?: string
-  createdAt?: Date
-  updatedAt?: Date
+  telegram_id?: string
 }
 export interface FanuserModel
   extends Model<FanuserAttributes>,
-    FanuserAttributes {}
-export class Fanuser extends Model<FanuserModel, FanuserAttributes> {}
+  FanuserAttributes { }
+export class Fanuser extends Model<FanuserModel, FanuserAttributes> { }
 export type FanuserStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): FanuserModel
+  new(values?: object, options?: BuildOptions): FanuserModel
 }
 
 /**
@@ -30,8 +28,8 @@ export interface ZakatSubuhAttributes {
 }
 export interface ZakatSubuhModel
   extends Model<ZakatSubuhAttributes>,
-    ZakatSubuhAttributes {}
-export class ZakatSubuh extends Model<ZakatSubuhModel, ZakatSubuhAttributes> {}
+  ZakatSubuhAttributes { }
+export class ZakatSubuh extends Model<ZakatSubuhModel, ZakatSubuhAttributes> { }
 export type ZakatSubuhStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): ZakatSubuhModel
+  new(values?: object, options?: BuildOptions): ZakatSubuhModel
 }
