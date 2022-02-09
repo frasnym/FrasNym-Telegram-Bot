@@ -2,14 +2,14 @@ import { Context, NarrowedContext, Types } from 'telegraf'
 import * as tg from 'typegram'
 import { logger } from '../../../config/logger'
 import { TelegramError } from '../../../errors/telegram-error'
-import { zakatService } from '../../../services'
+import { fanuserService, zakatService } from '../../../services'
 import { formatToDateID } from '../../../utils/date'
 import { numberWithCommas } from '../../../utils/number'
 
 declare type MatchedContext<
   C extends Context,
   T extends Types.UpdateType | Types.MessageSubType
-> = NarrowedContext<C, Types.MountMap[T]>
+  > = NarrowedContext<C, Types.MountMap[T]>
 
 export async function sendZakatInformationToUser(
   ctx: MatchedContext<Context<tg.Update>, 'text'>
@@ -85,6 +85,34 @@ export async function increaseZakatBySpin(
       ctx.reply(error.message)
     } else {
       ctx.reply(`Error while increase zakat: ${JSON.stringify(error)}`)
+    }
+  }
+}
+
+export async function greeting(
+  ctx: MatchedContext<Context<tg.Update>, 'text'>
+) {
+  try {
+    let fanuserText = "Sayang sekali, Anda belum terdaftar sebagai furafan 😔"
+
+    const fanuser = await fanuserService.getUserBytelegramId((ctx.from.id).toString())
+    if (fanuser) {
+      fanuserText = "Selamat, Anda sudah terdaftar pada sistem furafan 🥳"
+    }
+
+    ctx.reply(
+      `Halo ${ctx.from.first_name} ${ctx.from.last_name} 👋\nTelegramID Anda adalah: ${ctx.from.id}\n\n${fanuserText}`
+    )
+    logger.info(
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully greeting`
+    )
+  } catch (error) {
+    if (error instanceof TelegramError) {
+      ctx.reply(error.message)
+    } else {
+      ctx.reply(
+        `Error while greeting: ${JSON.stringify(error)}`
+      )
     }
   }
 }

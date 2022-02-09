@@ -28,8 +28,10 @@ export default class ZakatSubuhBot {
 
     /**
      * Available command
+     * hello - Greeting to show you account info
      * info - Informasi jumlah sedekah Anda
      */
+    newBot.command('hello', zakatSubuhBot.greeting)
     newBot.command('info', zakatSubuhBot.sendZakatInformationToUser)
     newBot.on('photo', zakatSubuhBot.increaseZakatBySpin)
 
