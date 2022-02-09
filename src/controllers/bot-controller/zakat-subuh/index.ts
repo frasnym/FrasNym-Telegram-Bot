@@ -88,6 +88,46 @@ export async function increaseZakatBySpin(
   }
 }
 
+export async function increaseZakatWithRandom(
+  ctx: MatchedContext<Context<tg.Update>, 'text'>
+) {
+  try {
+    const zakatSubuhService = new zakatService.ZakatSubuhService(
+      ctx.chat.id.toString()
+    )
+    await zakatSubuhService.initializeFanuser()
+
+    const sedekahSubuh = await zakatSubuhService.getCurrentZakat()
+    if (!sedekahSubuh.random_seed) {
+      ctx.replyWithMarkdown('Anda belum mempunyai nilai acak sedekah.\nAnda dapat mengubah nilai acak dengan cara: `/setrandomalms`')
+      return
+    }
+
+    const randomSeed = sedekahSubuh.random_seed.split(',')
+    const random = Math.floor(Math.random() * randomSeed.length);
+    const newZakatValue = parseInt(randomSeed[random])
+    if (!newZakatValue) {
+      throw new TelegramError(`Invalid zakat value: ${randomSeed[random]}`)
+    }
+
+    const zakatSubuh = await zakatSubuhService.increaseZakat(newZakatValue)
+
+    ctx.reply(
+      `Selamat, jumlah total sedekah Anda sudah diperbaharui 🎉\nHasil acak: Rp ${newZakatValue}\nTotal: Rp ${numberWithCommas(
+        zakatSubuh.total
+      )}`)
+    logger.info(
+      `[SedekahSubuhBot] [${ctx.chat.id}] Successfully increaseZakatWithRandom`
+    )
+  } catch (error) {
+    if (error instanceof TelegramError) {
+      ctx.reply(error.message)
+    } else {
+      ctx.reply(`Error while increaseZakatWithRandom: ${JSON.stringify(error)}`)
+    }
+  }
+}
+
 export async function greeting(
   ctx: MatchedContext<Context<tg.Update>, 'text'>
 ) {
