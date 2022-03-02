@@ -12,6 +12,7 @@ Available Command:
 /info - Information on the amount of your alms
 /randomalms - Add alms with random value
 /setrandomalms - Change random alms value
+/manualalms - Set alms manually
 ```
 
 ## ❓ How to Run
