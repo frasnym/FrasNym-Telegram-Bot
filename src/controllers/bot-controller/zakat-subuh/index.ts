@@ -113,9 +113,10 @@ export async function increaseZakatWithRandom(
     const zakatSubuh = await zakatSubuhService.increaseZakat(newZakatValue)
 
     ctx.reply(
-      `Selamat, jumlah total sedekah Anda sudah diperbaharui 🎉\nHasil acak: Rp ${newZakatValue}\nTotal: Rp ${numberWithCommas(
-        zakatSubuh.total
-      )}`)
+      `Selamat, jumlah total sedekah Anda sudah diperbaharui 🎉\nHasil acak: Rp ${numberWithCommas(
+        newZakatValue
+      )}\nTotal: Rp ${numberWithCommas(zakatSubuh.total)}`
+    )
     logger.info(
       `[SedekahSubuhBot] [${ctx.chat.id}] Successfully increaseZakatWithRandom`
     )
